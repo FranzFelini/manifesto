@@ -62,7 +62,7 @@ class BasicEmailTemplate(EmailTemplate):
 
                     <div class="description">
                         <strong>Description:</strong>
-                        <p>{e(pr_data.get('body', 'No description provided.'))}</p>
+                        <p>{e(pr_data.get('body') or 'No description provided.')}</p>
                     </div>
 
                     <div class="field">
