@@ -1,4 +1,5 @@
 import shutil
+import getpass
 from manifesto.config import Config
 from manifesto.github import GitHubClient
 from manifesto.email import EmailSender
@@ -15,7 +16,7 @@ class Notifier:
     def setup(self):
         print("\n=== Manifesto Setup ===\n")
 
-        github_token = input("Enter your GitHub Personal Access Token: ").strip()
+        github_token = getpass.getpass("Enter your GitHub Personal Access Token: ").strip()
 
         client = GitHubClient(github_token)
         if not client.verify_token():
@@ -26,7 +27,7 @@ class Notifier:
         print("✓ GitHub token saved\n")
 
         email = input("Enter your Gmail address: ").strip()
-        app_password = input("Enter your Gmail App Password: ").strip()
+        app_password = getpass.getpass("Enter your Gmail App Password: ").strip()
 
         self.config.save_email_credentials(email, app_password)
         print("✓ Email credentials saved\n")

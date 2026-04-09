@@ -1,3 +1,4 @@
+import html
 from typing import Dict, Any, List
 from manifesto.email.templates.base import EmailTemplate
 
@@ -40,11 +41,12 @@ class BuilderEmailTemplate(EmailTemplate):
         </style>
         """
 
+        e = html.escape
         sections = []
 
         if "header" in self.selected:
             repo = (
-                pr_data["base"]["repo"]["full_name"]
+                e(pr_data["base"]["repo"]["full_name"])
                 if "repository" in self.selected
                 else ""
             )
@@ -53,7 +55,7 @@ class BuilderEmailTemplate(EmailTemplate):
                 f'<div class="header"><h2>Pull Request Notification</h2>{subheading}</div>'
             )
         elif "repository" in self.selected:
-            sections.append(f'<h3>{pr_data["base"]["repo"]["full_name"]}</h3>')
+            sections.append(f'<h3>{e(pr_data["base"]["repo"]["full_name"])}</h3>')
 
         fields = []
         if "pr_number" in self.selected:
@@ -62,28 +64,28 @@ class BuilderEmailTemplate(EmailTemplate):
             )
         if "title" in self.selected:
             fields.append(
-                f'<div class="field"><span class="label">Title:</span><span class="value">{pr_data["title"]}</span></div>'
+                f'<div class="field"><span class="label">Title:</span><span class="value">{e(pr_data["title"])}</span></div>'
             )
         if "author" in self.selected:
             fields.append(
-                f'<div class="field"><span class="label">Author:</span><span class="value">{pr_data["user"]["login"]}</span></div>'
+                f'<div class="field"><span class="label">Author:</span><span class="value">{e(pr_data["user"]["login"])}</span></div>'
             )
         if "branch" in self.selected:
             fields.append(
-                f'<div class="field"><span class="label">Branch:</span><span class="value">{pr_data["head"]["ref"]} → {pr_data["base"]["ref"]}</span></div>'
+                f'<div class="field"><span class="label">Branch:</span><span class="value">{e(pr_data["head"]["ref"])} → {e(pr_data["base"]["ref"])}</span></div>'
             )
         if "status" in self.selected:
             fields.append(
-                f'<div class="field"><span class="label">Status:</span><span class="value">{pr_data["state"].upper()}</span></div>'
+                f'<div class="field"><span class="label">Status:</span><span class="value">{e(pr_data["state"].upper())}</span></div>'
             )
         if "description" in self.selected:
-            body_text = pr_data.get("body", "No description provided.")
+            body_text = e(pr_data.get("body", "No description provided."))
             fields.append(
                 f'<div class="description"><strong>Description:</strong><p>{body_text}</p></div>'
             )
         if "view_button" in self.selected:
             fields.append(
-                f'<div class="field"><a href="{pr_data["html_url"]}" style="background:#0366d6;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;display:inline-block;">View Pull Request</a></div>'
+                f'<div class="field"><a href="{e(pr_data["html_url"])}" style="background:#0366d6;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;display:inline-block;">View Pull Request</a></div>'
             )
 
         if fields:
