@@ -103,7 +103,7 @@ class Notifier:
             self.config.save_template_preference("basic")
             print("✓ Basic template selected")
 
-    def notify(self, pr_number: int):
+    def notify(self, pr_number: int, repo: str = None):
         github_token = self.config.get_github_token()
         if not github_token:
             print("Error: GitHub token not configured. Run 'manifesto setup' first.")
@@ -117,13 +117,20 @@ class Notifier:
             return
 
         client = GitHubClient(github_token)
-        repo_info = client.get_current_repo_info()
 
-        if not repo_info:
-            print("Error: Not in a git repository or no GitHub remote found")
-            return
-
-        owner, repo = repo_info
+        if repo:
+            parts = repo.split("/")
+            if len(parts) != 2 or not all(parts):
+                print("Error: --repo must be in the format owner/repo")
+                return
+            owner, repo = parts
+        else:
+            repo_info = client.get_current_repo_info()
+            if not repo_info:
+                print("Error: Not in a git repository or no GitHub remote found.")
+                print("Tip: Use --repo owner/repo to specify a repository explicitly.")
+                return
+            owner, repo = repo_info
         pr_data = client.get_pr(owner, repo, pr_number)
 
         if not pr_data:

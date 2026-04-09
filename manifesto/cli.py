@@ -25,13 +25,21 @@ def main():
     elif command == "notify":
         if len(sys.argv) < 3:
             print("Error: PR number required")
-            print("Usage: `manifesto notify <pr-number>`")
+            print("Usage: `manifesto notify <pr-number> [--repo owner/repo]`")
             return
         try:
             pr_number = int(sys.argv[2])
-            notifier.notify(pr_number)
         except ValueError:
             print("Error: PR number must be an integer")
+            return
+        repo = None
+        if "--repo" in sys.argv:
+            idx = sys.argv.index("--repo")
+            if idx + 1 >= len(sys.argv):
+                print("Error: --repo requires a value (e.g. --repo owner/repo)")
+                return
+            repo = sys.argv[idx + 1]
+        notifier.notify(pr_number, repo=repo)
     elif command == "branches":
         notifier.configure_branches()
     elif command == "template":
