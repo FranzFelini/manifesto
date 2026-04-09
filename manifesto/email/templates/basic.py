@@ -5,7 +5,7 @@ from manifesto.email.templates.base import EmailTemplate
 
 class BasicEmailTemplate(EmailTemplate):
     def generate(self, pr_data: Dict[str, Any]) -> tuple[str, str]:
-        subject = f"PR #{pr_data['number']}: {html.escape(pr_data['title'])}"
+        subject = f"PR #{pr_data['number']}: {pr_data['title']}"
 
         e = html.escape
         body = f"""

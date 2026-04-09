@@ -92,3 +92,27 @@ class Config:
 
     def get_branches(self) -> List[str]:
         return self._read_config().get("branches", ["stg", "staging", "dev", "development"])
+
+    def save_signature(self, signature: str) -> None:
+        data = self._read_config()
+        data["signature"] = signature
+        self._write_config(data)
+
+    def get_signature(self) -> Optional[str]:
+        return self._read_config().get("signature")
+
+    def save_last_version(self, version: str) -> None:
+        data = self._read_config()
+        data["last_version"] = version
+        self._write_config(data)
+
+    def get_last_version(self) -> Optional[str]:
+        return self._read_config().get("last_version")
+
+    def save_language(self, language: str) -> None:
+        data = self._read_config()
+        data["language"] = language
+        self._write_config(data)
+
+    def get_language(self) -> Optional[str]:
+        return self._read_config().get("language")

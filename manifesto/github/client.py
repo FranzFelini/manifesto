@@ -22,7 +22,22 @@ class GitHubClient:
 
         if response.status_code == 200:
             return response.json()
+        print(f"GitHub API error: {response.status_code} - {response.json().get('message', 'Unknown error')}")
         return None
+
+    def get_latest_release(self, owner: str, repo: str) -> Optional[str]:
+        url = f"{self.BASE_URL}/repos/{owner}/{repo}/releases/latest"
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            return response.json().get("tag_name")
+        return None
+
+    def get_pr_files(self, owner: str, repo: str, pr_number: int) -> list[str]:
+        url = f"{self.BASE_URL}/repos/{owner}/{repo}/pulls/{pr_number}/files"
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            return [f["filename"] for f in response.json()]
+        return []
 
     def get_current_repo_info(self) -> Optional[tuple[str, str]]:
         try:

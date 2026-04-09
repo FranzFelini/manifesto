@@ -2,7 +2,7 @@ from setuptools import setup, find_packages  # type: ignore
 
 setup(
     name="manifesto-nt",
-    version="1.0.1",
+    version="2.0.0",
     packages=find_packages(),
     install_requires=[
         "requests>=2.31.0",
