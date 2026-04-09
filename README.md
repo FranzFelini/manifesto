@@ -1,4 +1,4 @@
-# PR Notifier
+# Manifesto
 
 Automated email notifications for GitHub pull requests targeting staging/development branches.
 
